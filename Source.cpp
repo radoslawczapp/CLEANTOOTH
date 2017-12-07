@@ -2,8 +2,12 @@
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
 
+/*			Title     : CLEANTOOTH
+			Developer : Rados³aw Czapp
+*/
 
 const float FPS = 60;
+
 
 int main(void)
 {
@@ -34,6 +38,7 @@ int main(void)
 	ALLEGRO_BITMAP *menu_pomoc = NULL;
 	ALLEGRO_BITMAP *menu_wyjscie = NULL;
 	ALLEGRO_BITMAP *kursor = NULL;
+	ALLEGRO_BITMAP *rozgrywka = NULL;
 
 	al_init_image_addon();
 	menu = al_load_bitmap("menu.bmp");
@@ -42,16 +47,14 @@ int main(void)
 	menu_pomoc = al_load_bitmap("menu_pomoc.bmp");
 	menu_wyjscie = al_load_bitmap("menu_wyjscie.bmp");
 	kursor = al_load_bitmap("kursor.png");
-	
-	ALLEGRO_MOUSE_CURSOR *al_create_mouse_cursor(ALLEGRO_BITMAP *bmp,
-		int x_focus, int y_focus)
-	{
-		ALLEGRO_SYSTEM *sysdrv = al_get_system_driver();
-		ASSERT(bmp);
+	rozgrywka = al_load_bitmap("rozgrywka.bmp");
 
-		ASSERT(sysdrv->vt->create_mouse_cursor);
-		return sysdrv->vt->create_mouse_cursor(bmp, x_focus, y_focus);
+	al_install_mouse();
+	if (!al_install_mouse()) {
+		fprintf(stderr, "failed to initialize the mouse!\n");
+		return -1;
 	}
+
 	imageWidth = al_get_bitmap_width(menu);
 	imageHeight = al_get_bitmap_height(menu);
 
@@ -59,12 +62,6 @@ int main(void)
 	int kursor_y = 0;
 
 	bool redraw = true;
-
-	al_install_mouse();
-	if (!al_install_mouse()) {
-		fprintf(stderr, "failed to initialize the mouse!\n");
-		return -1;
-	}
 
 	timer = al_create_timer(1.0 / FPS);
 	if (!timer) {
@@ -84,36 +81,95 @@ int main(void)
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 
-	al_clear_to_color(al_map_rgb(0, 0, 0));
+	//al_clear_to_color(al_map_rgb(0, 0, 0));
 
-	al_draw_bitmap(menu, 0, 0, 0);
+	al_hide_mouse_cursor(display);
 
 	while (!done)
 	{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
-
+		
 		if (ev.type == ALLEGRO_EVENT_TIMER) 
 		{
 			redraw = true;
+
 		}
-		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) 
+		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) 
 		{
 			break;
-		}
-		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
+		}		
+
+		if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-				kursor_x = ev.mouse.x;
-				kursor_y = ev.mouse.y;
-			
+
+			kursor_x = ev.mouse.x;
+			kursor_y = -ev.mouse.y;
+			al_draw_bitmap(kursor, kursor_x, -kursor_y, 0);
 		}
-		if (kursor_x > 460 && kursor_x < 820 && kursor_y > 855 && kursor_y < 913)
+
 		{
-			al_draw_bitmap(menu_nowa_gra, imageWidth, imageHeight, 0);
-		}
-		else
-		{
-			al_draw_bitmap(menu, imageWidth, imageHeight, 0);
+/////////////////////////////////////////////////////////////////////////////////////NOWA GRA///////////////////////////////////////////////////////////////////////////////////
+			if (kursor_x > 360 && kursor_x < 640 &&
+				kursor_y > -714 && kursor_y < -670)
+			{
+				al_flip_display();
+				al_draw_bitmap(menu_nowa_gra, 0, 0, 0);
+
+				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+				{
+					if (ev.mouse.button & 1)
+					{
+						al_draw_bitmap(rozgrywka, 0, 0, 0);
+						al_flip_display();
+					}
+				}
+			}
+////////////////////////////////////////////////////////////////////////////////////POMOC/////////////////////////////////////////////////////////////////////////////////////
+			else if (kursor_x > 415 && kursor_x < 585 &&
+				kursor_y > -790 && kursor_y < -750)
+			{
+				al_flip_display();
+				al_draw_bitmap(menu_pomoc, 0, 0, 0);
+
+				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+				{
+					if (ev.mouse.button & 1)
+						done = true;
+				}
+			}
+/////////////////////////////////////////////////////////////////////////////////////O AUTORZE/////////////////////////////////////////////////////////////////////////////////
+			else if (kursor_x > 347 && kursor_x < 650 &&
+				kursor_y > -870 && kursor_y < -827)
+			{
+				al_flip_display();
+				al_draw_bitmap(menu_o_autorze, 0, 0, 0);
+
+				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+				{
+					if (ev.mouse.button & 1)
+						done = true;
+				}
+			}
+/////////////////////////////////////////////////////////////////////////////////////WYJŒCIE///////////////////////////////////////////////////////////////////////////////////
+			else if (kursor_x > 378 && kursor_x < 618 &&
+				kursor_y > -946 && kursor_y < -905)
+			{
+				al_flip_display();
+				al_draw_bitmap(menu_wyjscie, 0, 0, 0);
+
+				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+				{
+					if (ev.mouse.button & 1)
+						done = true;
+				}
+			}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			else
+			{
+				al_flip_display();
+				al_draw_bitmap(menu, 0, 0, 0);
+			}
 		}
 
 		if (redraw && al_is_event_queue_empty(event_queue)) 
@@ -122,7 +178,7 @@ int main(void)
 
 			//al_draw_bitmap(menu, imageWidth, imageHeight, 0);
 
-			//al_draw_bitmap(kursor, kursor_x, kursor_y, 0);
+			al_draw_bitmap(kursor, kursor_x, -kursor_y, 0);
 
 			al_flip_display();
 		}
