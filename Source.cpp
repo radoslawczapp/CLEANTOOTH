@@ -14,6 +14,7 @@ int main(void)
 	int width = 1000;
 	int height = 1000;
 	bool done = false;
+	bool gra = true;
 
 	int imageWidth = 800;
 	int imageHeight = 800;
@@ -39,6 +40,8 @@ int main(void)
 	ALLEGRO_BITMAP *menu_wyjscie = NULL;
 	ALLEGRO_BITMAP *kursor = NULL;
 	ALLEGRO_BITMAP *rozgrywka = NULL;
+	ALLEGRO_BITMAP *pomoc = NULL;
+	ALLEGRO_BITMAP *oautorze = NULL;
 
 	al_init_image_addon();
 	menu = al_load_bitmap("menu.bmp");
@@ -48,6 +51,8 @@ int main(void)
 	menu_wyjscie = al_load_bitmap("menu_wyjscie.bmp");
 	kursor = al_load_bitmap("kursor.png");
 	rozgrywka = al_load_bitmap("rozgrywka.bmp");
+	pomoc = al_load_bitmap("pomoc.bmp");
+	oautorze = al_load_bitmap("oautorze.bmp");
 
 	al_install_mouse();
 	if (!al_install_mouse()) {
@@ -83,9 +88,9 @@ int main(void)
 
 	//al_clear_to_color(al_map_rgb(0, 0, 0));
 
-	al_hide_mouse_cursor(display);
+	//al_hide_mouse_cursor(display);
 
-	while (!done)
+	while (gra)
 	{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
@@ -107,62 +112,89 @@ int main(void)
 			kursor_y = -ev.mouse.y;
 			al_draw_bitmap(kursor, kursor_x, -kursor_y, 0);
 		}
-
+///////////////////////////////////////////////////////////////////////////////////AKCJE///////////////////////////////////////////////////////////////////////////////////////		
+		
+///////////////////////NOWA GRA//////////////////////////////////
+		if (kursor_x > 360 && kursor_x < 640 &&
+			kursor_y > -714 && kursor_y < -670 &&
+			ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
-/////////////////////////////////////////////////////////////////////////////////////NOWA GRA///////////////////////////////////////////////////////////////////////////////////
+			if (ev.mouse.button & 1)
+			{
+				gra = false;
+				al_draw_bitmap(rozgrywka, 0, 0, 0);
+				al_flip_display();
+				al_rest(10.0);
+			}
+		}
+////////////////////////POMOC/////////////////////////////////////
+		if (kursor_x > 415 && kursor_x < 585 &&
+			kursor_y > -790 && kursor_y < -750 &&
+			ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+			if (ev.mouse.button & 1)
+			{
+				gra = false;
+				al_draw_bitmap(pomoc, 0, 0, 0);
+				al_flip_display();
+				al_rest(15.0);
+			}
+		}
+////////////////////////////O AUTORZE////////////////////////////
+		if (kursor_x > 347 && kursor_x < 650 &&
+			kursor_y > -870 && kursor_y < -827 &&
+			ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+			if (ev.mouse.button & 1)
+			{
+				gra = false;
+				al_draw_bitmap(oautorze, 0, 0, 0);
+				al_flip_display();
+				al_rest(15.0);
+			}
+		}
+///////////////////////////WYJŒCIE/////////////////////////////////
+		if (kursor_x > 378 && kursor_x < 618 &&
+			kursor_y > -946 && kursor_y < -905 &&
+			ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+			if (ev.mouse.button & 1)
+			{
+				gra = false;
+			}
+		}
+////////////////////////////////////////////////////////////////////////////////////WYŒWIETLANIE//////////////////////////////////////////////////////////////////////////////
+		if (redraw && al_is_event_queue_empty(event_queue)) 
+		{
+			redraw = false;
+//////////////////////////////NOWA GRA////////////////////////////////////////////////
 			if (kursor_x > 360 && kursor_x < 640 &&
 				kursor_y > -714 && kursor_y < -670)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_nowa_gra, 0, 0, 0);
-
-				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-				{
-					if (ev.mouse.button & 1)
-					{
-						al_draw_bitmap(rozgrywka, 0, 0, 0);
-						al_flip_display();
-					}
-				}
 			}
-////////////////////////////////////////////////////////////////////////////////////POMOC/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////POMOC////////////////////////////////////////////////
 			else if (kursor_x > 415 && kursor_x < 585 &&
 				kursor_y > -790 && kursor_y < -750)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_pomoc, 0, 0, 0);
-
-				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-				{
-					if (ev.mouse.button & 1)
-						done = true;
-				}
 			}
-/////////////////////////////////////////////////////////////////////////////////////O AUTORZE/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////O AUTORZE////////////////////////////////////////////
 			else if (kursor_x > 347 && kursor_x < 650 &&
 				kursor_y > -870 && kursor_y < -827)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_o_autorze, 0, 0, 0);
 
-				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-				{
-					if (ev.mouse.button & 1)
-						done = true;
-				}
 			}
-/////////////////////////////////////////////////////////////////////////////////////WYJŒCIE///////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////WYJŒCIE////////////////////////////////////////////
 			else if (kursor_x > 378 && kursor_x < 618 &&
 				kursor_y > -946 && kursor_y < -905)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_wyjscie, 0, 0, 0);
-
-				if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-				{
-					if (ev.mouse.button & 1)
-						done = true;
-				}
 			}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			else
@@ -170,13 +202,7 @@ int main(void)
 				al_flip_display();
 				al_draw_bitmap(menu, 0, 0, 0);
 			}
-		}
-
-		if (redraw && al_is_event_queue_empty(event_queue)) 
-		{
-			redraw = false;
-
-			//al_draw_bitmap(menu, imageWidth, imageHeight, 0);
+			al_draw_bitmap(menu, imageWidth, imageHeight, 0);
 
 			al_draw_bitmap(kursor, kursor_x, -kursor_y, 0);
 
