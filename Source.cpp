@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
@@ -33,6 +34,8 @@ int main(void)
 	
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 
+	ALLEGRO_KEYBOARD_STATE keyState;
+
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *menu_nowa_gra = NULL;
 	ALLEGRO_BITMAP *menu_o_autorze = NULL;
@@ -59,7 +62,12 @@ int main(void)
 		fprintf(stderr, "failed to initialize the mouse!\n");
 		return -1;
 	}
-
+	al_install_keyboard();
+	if (!al_install_keyboard()) 
+	{
+		fprintf(stderr, "failed to initialize the keyboard!\n");
+		return -1;
+	}
 	imageWidth = al_get_bitmap_width(menu);
 	imageHeight = al_get_bitmap_height(menu);
 
@@ -86,9 +94,12 @@ int main(void)
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
+
+
 	//al_clear_to_color(al_map_rgb(0, 0, 0));
 
-	//al_hide_mouse_cursor(display);
+	al_hide_mouse_cursor(display);
 
 	while (gra)
 	{
@@ -121,10 +132,10 @@ int main(void)
 		{
 			if (ev.mouse.button & 1)
 			{
-				gra = false;
+				//gra = true;
 				al_draw_bitmap(rozgrywka, 0, 0, 0);
 				al_flip_display();
-				al_rest(10.0);
+				al_rest(5.0);
 			}
 		}
 ////////////////////////POMOC/////////////////////////////////////
@@ -134,10 +145,11 @@ int main(void)
 		{
 			if (ev.mouse.button & 1)
 			{
-				gra = false;
+				
 				al_draw_bitmap(pomoc, 0, 0, 0);
 				al_flip_display();
-				al_rest(15.0);
+				al_rest(10.0);	
+			
 			}
 		}
 ////////////////////////////O AUTORZE////////////////////////////
@@ -147,10 +159,10 @@ int main(void)
 		{
 			if (ev.mouse.button & 1)
 			{
-				gra = false;
+				//gra = false;
 				al_draw_bitmap(oautorze, 0, 0, 0);
 				al_flip_display();
-				al_rest(15.0);
+				al_rest(5.0);
 			}
 		}
 ///////////////////////////WYJŒCIE/////////////////////////////////
@@ -173,6 +185,7 @@ int main(void)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_nowa_gra, 0, 0, 0);
+
 			}
 ///////////////////////////////POMOC////////////////////////////////////////////////
 			else if (kursor_x > 415 && kursor_x < 585 &&
@@ -187,7 +200,6 @@ int main(void)
 			{
 				al_flip_display();
 				al_draw_bitmap(menu_o_autorze, 0, 0, 0);
-
 			}
 //////////////////////////////WYJŒCIE////////////////////////////////////////////
 			else if (kursor_x > 378 && kursor_x < 618 &&
