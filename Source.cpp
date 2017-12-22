@@ -12,15 +12,26 @@ const float FPS = 60;
 void graj(ALLEGRO_DISPLAY *display)
 {
 	ALLEGRO_BITMAP *rozgrywka = NULL;
-	al_init_image_addon();
 	rozgrywka = al_load_bitmap("rozgrywka.bmp");
-
+	ALLEGRO_BITMAP *zabek = NULL;
+	zabek = al_load_bitmap("zabek.png");
+	ALLEGRO_BITMAP *pauza = NULL;
+	pauza = al_load_bitmap("pauza.bmp");
+	int t = 0;
+	al_init_image_addon();
 	
+	
+	int x, y;
+	x = 0;
+	y = 0;
+	int zabek_x = 30;
+	int zabek_y = 875;
+
 	al_flip_display();
 
 	bool done = false;
 	bool gra = true;
-
+	bool skok = false;
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
 	ALLEGRO_EVENT_QUEUE *event_queue1 = NULL;
 	ALLEGRO_KEYBOARD_STATE keyState;
@@ -60,18 +71,65 @@ void graj(ALLEGRO_DISPLAY *display)
 		}
 		if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
 		{
-			break;
+			break;			
+		}
+		if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
+		{
+			x = x + 3;
+		}
+		if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
+		{
+			x = x - 3;
+		}
+		if (al_key_down(&keyState, ALLEGRO_KEY_UP) && skok == false)
+		{
+			skok = true;
+		}
+
+		if (skok == true)
+		{
+			y = y - 16+ 0.8 * t;
+			t++;
+
+			if (y == 0)
+			{
+				skok = false;
+				t = 0;
+			}
 		}
 		if (redraw && al_is_event_queue_empty(event_queue1))
 		{
 			redraw = false;
 
 			al_draw_bitmap(rozgrywka, 0, 0, 0);
+			al_draw_bitmap(zabek, zabek_x, zabek_y + y, 0);
 
-			al_draw_filled_rounded_rectangle(0,980,200,1000,1,1,al_map_rgb(0,128,128));
+	/*1*/	al_draw_filled_rounded_rectangle(10 + x, 950, 200 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
+				if (200 + x <= 50 && zabek_y + y + 40 >= 875)
+				{
+					zabek_y +=10;
+				}
+
+	/*2*/	al_draw_filled_rounded_rectangle(220 + x, 900, 600 + x, 940, 10, 10, al_map_rgb(0, 127, 127));
+				if (220 + x <= 50 && zabek_y  > 865)
+				{
+					zabek_y = 820;
+				}
+
+	/*3*/	al_draw_filled_rounded_rectangle(650 + x, 850, 750 + x, 890, 10, 10, al_map_rgb(0, 127, 127));
+				
+	/*4*/	al_draw_filled_rounded_rectangle(800 + x, 950, 1200 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
+
+	/*5*/	al_draw_filled_rounded_rectangle(1250 + x, 950, 1400 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
+
+	/*6*/   al_draw_filled_rounded_rectangle(1450 + x, 900, 1600 + x, 940, 10, 10, al_map_rgb(0, 127, 127));
+			
+
+			
 
 			al_flip_display();
 		}
+		//if (zabek_x)
 	}
 }
 
@@ -155,7 +213,7 @@ int main(void)
 
 	//al_clear_to_color(al_map_rgb(0, 0, 0));
 
-	//al_hide_mouse_cursor(display);
+	al_hide_mouse_cursor(display);
 
 	while (gra)
 	{
