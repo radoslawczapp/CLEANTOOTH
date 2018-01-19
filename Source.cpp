@@ -23,6 +23,8 @@ void graj(ALLEGRO_DISPLAY *display)
 	wygrana = al_load_bitmap("wygrana.png");
 	ALLEGRO_BITMAP *szczoteczka = NULL;
 	szczoteczka = al_load_bitmap("szczoteczka.png");
+	ALLEGRO_BITMAP *drzwi = NULL;
+	drzwi = al_load_bitmap("drzwi.png");
 
 	int t = 0;
 	al_init_image_addon();
@@ -33,6 +35,8 @@ void graj(ALLEGRO_DISPLAY *display)
 	y = 0;
 	int zabek_x = 30;
 	int zabek_y = 875;
+	int dx;
+	dx = 0;
 
 	al_flip_display();
 
@@ -60,7 +64,24 @@ void graj(ALLEGRO_DISPLAY *display)
 
 	al_start_timer(timer);
 
-	
+	typedef struct szczoteczka
+	{
+		bool live;
+	}szczotka;
+
+	szczotka szczota1;
+	szczotka szczota2;
+	szczotka szczota3;
+	szczotka szczota4;
+	szczotka szczota5;
+	szczotka szczota6;
+
+	szczota1.live = true;
+	szczota2.live = true;
+	szczota3.live = true;
+	szczota4.live = true;
+	szczota5.live = true;
+	szczota6.live = true;
 
 	while (1)
 	{
@@ -88,6 +109,7 @@ void graj(ALLEGRO_DISPLAY *display)
 		if (spadek == false && al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
 		{
 			x = x - 3;
+			dx = dx - 3;
 		}
 		if (al_key_down(&keyState, ALLEGRO_KEY_UP) && skok == false)
 		{
@@ -96,7 +118,7 @@ void graj(ALLEGRO_DISPLAY *display)
 
 		if (skok == true)
 		{
-			y = y - 16 + 0.6 * t;
+			y = y - 13 + 0.5 * t;
 			t++;
 
 			if (y >= 0)
@@ -111,8 +133,41 @@ void graj(ALLEGRO_DISPLAY *display)
 			redraw = false;
 
 			al_draw_bitmap(rozgrywka, 0, 0, 0);
-			al_draw_bitmap(zabek, zabek_x, zabek_y + y, 0);
+	
 
+	if (szczota1.live)
+	{
+		al_draw_bitmap(szczoteczka, 100 + x, 900, 0);
+		if (dx == 100 + dx) szczota1.live = false;
+	}
+	if (szczota2.live)
+	{
+		al_draw_bitmap(szczoteczka, 350 + x, 850, 0);
+		if (dx == 350 + dx) szczota1.live = false;
+	}
+	if (szczota3.live)
+	{
+		al_draw_bitmap(szczoteczka, 675 + x, 800, 0);
+		if (dx == 675 + dx) szczota1.live = false;
+	}
+	if (szczota4.live)
+	{
+		al_draw_bitmap(szczoteczka, 1150 + x, 750, 0);
+		if (dx == 1150 + dx) szczota1.live = false;
+	}
+	if (szczota5.live)
+	{
+		al_draw_bitmap(szczoteczka, 1300 + x, 700, 0);
+		if (dx == 1300 + dx) szczota1.live = false;
+	}
+	if (szczota6.live)
+	{
+		al_draw_bitmap(szczoteczka, 1500 + x, 650, 0);
+		if (dx == 1500 + dx) szczota1.live = false;
+	}
+
+		al_draw_bitmap(zabek, zabek_x, zabek_y + y, 0);
+			
 			
 
 			if (spadek == true)
@@ -127,8 +182,9 @@ void graj(ALLEGRO_DISPLAY *display)
 				}
 				
 			}
+			
 	/*1*/	al_draw_filled_rounded_rectangle(10 + x, 950, 200 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
-	al_draw_bitmap(szczoteczka, 100, 900, 0);
+	
 /*SPADANIE*/	if (200 + x <= 50 && zabek_y + y >= 875)
 				{
 					spadek = true;
@@ -188,7 +244,7 @@ void graj(ALLEGRO_DISPLAY *display)
 				{
 					spadek = true;
 				}	
-	/*7*/		al_draw_filled_rounded_rectangle(1650 + x, 650, 1800 + x, 700, 10, 10, al_map_rgb(0, 127, 127));
+	/*7*/		al_draw_filled_rounded_rectangle(1650 + x, 650, 1880 + x, 690, 10, 10, al_map_rgb(0, 127, 127));
 				if (1650 + x >= -50 && 1650 + x <= 50 && zabek_y + y >= 575)
 				{
 					zabek_y = 575;
@@ -197,7 +253,8 @@ void graj(ALLEGRO_DISPLAY *display)
 {
 	spadek = true;
 }
-
+				al_draw_bitmap(drzwi, 1780 + x, 530, 0);
+				//al_draw_filled_rounded_rectangle(1780 + x, 530, 1900 + x, 690, 0, 0, al_map_rgb(0, 127, 127));
 			if (1700 + x <= -50)
 			{
 				al_draw_bitmap(wygrana, 0, 0, 0);
@@ -205,8 +262,6 @@ void graj(ALLEGRO_DISPLAY *display)
 				al_rest(2.0);
 				break;
 			}
-
-			//if (spadek == true)	zabek_y += 10;
 
 			al_flip_display();
 		}
