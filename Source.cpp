@@ -85,7 +85,7 @@ void graj(ALLEGRO_DISPLAY *display)
 		{
 			//x = x + 3;
 		}
-		if (spadek==false&&al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
+		if (spadek == false && al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
 		{
 			x = x - 3;
 		}
@@ -96,7 +96,7 @@ void graj(ALLEGRO_DISPLAY *display)
 
 		if (skok == true)
 		{
-			y = y - 13 + 0.5 * t;
+			y = y - 16 + 0.6 * t;
 			t++;
 
 			if (y >= 0)
@@ -113,48 +113,101 @@ void graj(ALLEGRO_DISPLAY *display)
 			al_draw_bitmap(rozgrywka, 0, 0, 0);
 			al_draw_bitmap(zabek, zabek_x, zabek_y + y, 0);
 
+			
+
+			if (spadek == true)
+			{
+				zabek_y += 10;
+				if (zabek_y > 1000)
+				{
+					al_draw_bitmap(przegrana, 0, 0, 0);
+					al_flip_display();
+					al_rest(2.0);
+					break;
+				}
+				
+			}
 	/*1*/	al_draw_filled_rounded_rectangle(10 + x, 950, 200 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
+	al_draw_bitmap(szczoteczka, 100, 900, 0);
 /*SPADANIE*/	if (200 + x <= 50 && zabek_y + y >= 875)
 				{
-					//zabek_y += 10;
-					//al_draw_bitmap(przegrana, 0, 0, 0);
-					//break;
 					spadek = true;
+					/*al_draw_bitmap(przegrana, 0, 0, 0);
+					al_flip_display();
+					al_rest(2.0);
+					break;*/
 				}
 
-	/*2*/	al_draw_filled_rounded_rectangle(220 + x, 900, 600 + x, 940, 10, 10, al_map_rgb(0, 127, 127));
-				if (220 + x >=-50 && 220 + x <= 50 && zabek_y + y >= 825)
+	/*2*/	al_draw_filled_rounded_rectangle(250 + x, 900, 600 + x, 940, 10, 10, al_map_rgb(0, 127, 127));
+				if (250 + x >= -50 && 250 + x <= 50 && zabek_y + y >= 825)
 				{
 					zabek_y = 825;
-					
 				}
 
-/*SPADANIE*/	if (600 + x <= 50 && zabek_y + y >= 825)
+/*SPADANIE*/	if (620 + x <= 50 && zabek_y + y >= 825)
 				{
-					//zabek_y += 10;
 					spadek = true;
 				}
 
 	/*3*/	al_draw_filled_rounded_rectangle(650 + x, 850, 750 + x, 890, 10, 10, al_map_rgb(0, 127, 127));
-				if (550 + x <= -50 && 550 + x <= 50 && zabek_y + y >= 775)
+				if (650 + x >= -50 && 650 + x <= 50 && zabek_y + y >= 750)
 				{
 					zabek_y = 775;
 				}
 
-/*SPADANIE*/	if (750 + x <= 50 && zabek_y + y >= 775)
+/*SPADANIE*/	if (775 + x <= 50 && zabek_y + y >= 775)
 				{
 					spadek = true;
 				}
-	/*4*/	al_draw_filled_rounded_rectangle(800 + x, 950, 1200 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
 
-	/*5*/	al_draw_filled_rounded_rectangle(1250 + x, 950, 1400 + x, 990, 10, 10, al_map_rgb(0, 127, 127));
-
-	/*6*/   al_draw_filled_rounded_rectangle(1450 + x, 900, 1600 + x, 940, 10, 10, al_map_rgb(0, 127, 127));
-			
-				if (spadek == true)
+	/*4*/	al_draw_filled_rounded_rectangle(800 + x, 800, 1200 + x, 840, 10, 10, al_map_rgb(0, 127, 127));
+				if (800 + x >= -50 && 800 + x <= 50 && zabek_y + y >= 725)
 				{
-					zabek_y += 14;
+					zabek_y = 725;
 				}
+
+/*SPADANIE*/	if (1220 + x <= 50 && zabek_y + y >= 725)
+				{
+					spadek = true;
+				}
+	/*5*/	al_draw_filled_rounded_rectangle(1250 + x, 750, 1400 + x, 790, 10, 10, al_map_rgb(0, 127, 127));
+				if (1250 + x >= -50 && 1250 + x <= 50 && zabek_y + y >= 675)
+				{
+					zabek_y = 675;
+				}
+/*SPADANIE*/	if (1420 + x <= 50 && zabek_y + y >= 675)
+				{
+					spadek = true;
+				}
+	/*6*/		al_draw_filled_rounded_rectangle(1450 + x, 700, 1600 + x, 740, 10, 10, al_map_rgb(0, 127, 127));
+				if (1450 + x >= -50 && 1450 + x <= 50 && zabek_y + y >= 625)
+				{
+					zabek_y = 625;
+				}
+/*SPADANIE*/	if (1620 + x <= 50 && zabek_y + y >= 625)
+				{
+					spadek = true;
+				}	
+	/*7*/		al_draw_filled_rounded_rectangle(1650 + x, 650, 1800 + x, 700, 10, 10, al_map_rgb(0, 127, 127));
+				if (1650 + x >= -50 && 1650 + x <= 50 && zabek_y + y >= 575)
+				{
+					zabek_y = 575;
+				}
+/*SPADANIE*/	if (1620 + x <= 50 && zabek_y + y >= 625)
+{
+	spadek = true;
+}
+
+			if (1700 + x <= -50)
+			{
+				al_draw_bitmap(wygrana, 0, 0, 0);
+				al_flip_display();
+				al_rest(2.0);
+				break;
+			}
+
+			//if (spadek == true)	zabek_y += 10;
+
 			al_flip_display();
 		}
 	}
@@ -193,7 +246,10 @@ int main(void)
 	ALLEGRO_BITMAP *rozgrywka = NULL;
 	ALLEGRO_BITMAP *pomoc = NULL;
 	ALLEGRO_BITMAP *oautorze = NULL;
-
+	ALLEGRO_BITMAP *przegrana = NULL;
+	ALLEGRO_BITMAP *wygrana = NULL;
+	ALLEGRO_BITMAP *szczoteczka = NULL;
+	
 	al_init_image_addon();
 	al_init_primitives_addon();
 	menu = al_load_bitmap("menu.bmp");
@@ -205,6 +261,9 @@ int main(void)
 	rozgrywka = al_load_bitmap("rozgrywka.bmp");
 	pomoc = al_load_bitmap("pomoc.bmp");
 	oautorze = al_load_bitmap("oautorze.bmp");
+	przegrana = al_load_bitmap("przegrana.png");
+	wygrana = al_load_bitmap("wygrana.png");
+	szczoteczka = al_load_bitmap("szczoteczka.png");
 
 	al_install_mouse();
 	if (!al_install_mouse()) {
